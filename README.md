@@ -1,4 +1,4 @@
-# Modolos Technical Assessment - Kanban Board
+# Kanban Board
 
 A Kanban board application built with React, TypeScript, and Docker. Features comprehensive drag-and-drop functionality with full accessibility support.
 
