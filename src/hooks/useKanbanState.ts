@@ -107,7 +107,9 @@ export function useKanbanState() {
 		) => {
 			setState((prev) => {
 				const card = prev.cards.find((c) => c.id === cardId);
-				if (!card) return prev;
+				if (!card) {
+					return prev;
+				}
 
 				// Remove card from its current position
 				const otherCards = prev.cards.filter((c) => c.id !== cardId);

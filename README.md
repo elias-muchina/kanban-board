@@ -123,3 +123,19 @@ node --version
 # On Linux/Mac, may need sudo
 sudo docker-compose up --build
 ```
+
+## 🏗️ Implementation Approach
+
+**Architecture:** Built a generic `DraggableList<T>` component using TypeScript generics, reused for both columns and cards. Clean separation between generic drag-drop logic and Kanban-specific business logic.
+
+**Accessibility:** Full keyboard navigation (Space/Enter/Arrow keys/Escape) with ARIA attributes and live region announcements. Semantic HTML structure throughout.
+
+**State Management:** Custom `useKanbanState` hook with localStorage persistence and immutable updates. Components use clean API functions without direct state manipulation.
+
+**Drag & Drop:** HTML5 Drag API for mouse users, separate keyboard system with focus management. Supports cross-column movement for both interaction methods.
+
+**Deployment:** Multi-stage Docker build (Node.js → Nginx Alpine) with production optimizations: gzip compression, security headers, health checks.
+
+**Tech Stack:** React 19 + TypeScript + Tailwind CSS + Vite, fully responsive design with error handling and graceful fallbacks.
+
+---

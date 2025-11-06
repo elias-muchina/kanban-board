@@ -35,6 +35,11 @@ function KanbanBoard({ title }: KanbanBoardProps) {
 	}>({ show: false, mode: "add", columnId: "" });
 	const [dragClearTrigger, setDragClearTrigger] = useState(0);
 
+	// Force re-render of drag-drop components when columns change
+	useEffect(() => {
+		setDragClearTrigger((prev) => prev + 1);
+	}, [columns.length]);
+
 	const handleCardGrabbed = () => {
 		const columnsList = document.querySelector('[aria-label="Kanban columns"]');
 		if (columnsList) {
@@ -78,6 +83,13 @@ function KanbanBoard({ title }: KanbanBoardProps) {
 		toColumnId: string,
 		newIndex: number
 	) => {
+		// Verify target column exists
+		const targetColumnExists = columns.some((col) => col.id === toColumnId);
+		if (!targetColumnExists) {
+			console.error("Target column does not exist:", toColumnId);
+			return;
+		}
+
 		moveCard(cardId, fromColumnId, toColumnId, newIndex);
 	};
 
@@ -164,7 +176,11 @@ function KanbanBoard({ title }: KanbanBoardProps) {
 		_isDragging: boolean,
 		isGrabbed: boolean
 	) => (
-		<article className="transition-all" aria-label={`${column.title} column`}>
+		<article
+			key={column.id}
+			className="transition-all"
+			aria-label={`${column.title} column`}
+		>
 			<KanbanColumn
 				column={column}
 				cards={getCardsForColumn(column.id)}

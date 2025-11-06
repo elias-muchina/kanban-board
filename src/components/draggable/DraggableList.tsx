@@ -206,6 +206,8 @@ function DraggableList<T extends DraggableItem>({
 					const itemData = e.dataTransfer.getData("application/json");
 					const item = itemData ? JSON.parse(itemData) : null;
 					if (item) {
+						// Ensure this drop event is consumed
+						e.stopPropagation();
 						onMove(item, listId, dropIndex);
 						announce(`Moved item to ${ariaLabel} at position ${dropIndex + 1}`);
 					}
@@ -435,10 +437,22 @@ function DraggableList<T extends DraggableItem>({
 
 				{/* Invisible drop zone for end-of-list drops */}
 				<div
-					className="min-h-[20px] w-full"
+					className={`w-full ${
+						items.length === 0
+							? "min-h-[200px] border-2 border-dashed border-transparent hover:border-gray-300"
+							: "min-h-[20px]"
+					}`}
 					onDragOver={(e) => {
 						e.preventDefault();
 						e.dataTransfer.dropEffect = "move";
+						if (items.length === 0) {
+							e.currentTarget.style.borderColor = "#d1d5db";
+						}
+					}}
+					onDragLeave={(e) => {
+						if (items.length === 0) {
+							e.currentTarget.style.borderColor = "transparent";
+						}
 					}}
 					onDrop={(e) => {
 						e.preventDefault();
@@ -452,6 +466,7 @@ function DraggableList<T extends DraggableItem>({
 								const itemData = e.dataTransfer.getData("application/json");
 								const item = itemData ? JSON.parse(itemData) : null;
 								if (item) {
+									e.stopPropagation();
 									onMove(item, listId, items.length);
 									announce(`Moved item to ${ariaLabel} at end of list`);
 								}
